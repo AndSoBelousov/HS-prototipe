@@ -46,8 +46,8 @@ public class CardManager : MonoBehaviour
         private void Start()
         {
             _player1Cards = CreateDeck(_deck1Parente);
-            _player2Cards = CreateDeck(_deck2Parente);
-            StartCoroutine(IssuingCards());
+            //_player2Cards = CreateDeck(_deck2Parente);
+            //StartCoroutine(IssuingCards());
         }
 
         private Card[] CreateDeck(Transform parent)
@@ -73,7 +73,7 @@ public class CardManager : MonoBehaviour
         
         IEnumerator IssuingCards()
         {
-           
+           yield return new WaitForSeconds(1);
 
             int numberOfCards = 7;
             for(int i = 0; i < numberOfCards; i++)
@@ -93,23 +93,23 @@ public class CardManager : MonoBehaviour
             }
 
         }
-        //private void Update()
-        //{
-        //    if(Input.GetKeyDown(KeyCode.Space))
-        //    {
-        //        Card index = null; 
-        //        for(int i = _player1Cards.Length - 1; i >= 0; i--) 
-        //        {
-        //            if (_player1Cards[i] != null)
-        //            {
-        //                index = _player1Cards[i];
-        //                _player1Cards[i] = null;
-        //                break;
-        //            }
-        //        }
-        //        _player1.SetNewCard(index);
-        //    }
-        //}
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Card index = null;
+                for (int i = _player1Cards.Length - 1; i >= 0; i--)
+                {
+                    if (_player1Cards[i] != null)
+                    {
+                        index = _player1Cards[i];
+                        _player1Cards[i] = null;
+                        break;
+                    }
+                }
+                _player1.SetNewCard(index);
+            }
+        }
     }
 }
 

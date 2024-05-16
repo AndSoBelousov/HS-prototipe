@@ -9,39 +9,39 @@ namespace Cards
         private Card[] _cardsInHand;
 
         [SerializeField]
-        private Transform[] _positions;
+        private Transform _positions;
 
         private void Start ()
 
         {
-            _cardsInHand = new Card[_positions.Length];
+            //_cardsInHand = new Card[_positions.Length];
         }
         public bool SetNewCard(Card card)
         {
             if (card == null) return true;
 
-            var index = GetLastPosition();
+            //var index = GetLastPosition();
 
-            if (index == -1)
-            {
-                Destroy(card.gameObject);
-                return false;
-            }
+            //if (index == -1)
+            //{
+            //    Destroy(card.gameObject);
+            //    return false;
+            //}
 
-            _cardsInHand[index] = card;
-            StartCoroutine(MoveInHand(card, _positions[index]));
+            //_cardsInHand[index] = card;
+            StartCoroutine(MoveInHand(card, _positions));
 
             return true;
         }
 
-        private int GetLastPosition()
-        {
-            for (int i =0;  i < _cardsInHand.Length; i++)
-            {
-                if (_cardsInHand[i] == null) return i;
-            }
-            return -1;
-        }
+        //private int GetLastPosition()
+        //{
+        //    for (int i =0;  i < _cardsInHand.Length; i++)
+        //    {
+        //        if (_cardsInHand[i] == null) return i;
+        //    }
+        //    return -1;
+        //}
 
         private IEnumerator MoveInHand(Card card, Transform target)
         {
@@ -53,9 +53,11 @@ namespace Cards
             {   
                 card.transform.position = Vector3.Lerp(startPos, endPos, time);
                 time += Time.deltaTime;
+
                 yield return null;
             }
 
+            card.GetComponent<Transform>().SetParent(transform);
             card.State = CardStateType.InHand;
         }
 

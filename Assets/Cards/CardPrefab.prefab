@@ -1348,8 +1348,7 @@ GameObject:
   - component: {fileID: 1307249474124220042}
   - component: {fileID: 1307249474124220041}
   - component: {fileID: 1307249474124220040}
-  - component: {fileID: 8925793763771826254}
-  - component: {fileID: 316115213487106450}
+  - component: {fileID: -3443503803376115510}
   m_Layer: 0
   m_Name: CardPrefab
   m_TagString: Untagged
@@ -1366,7 +1365,7 @@ RectTransform:
   m_GameObject: {fileID: 1307249474124220039}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -0}
-  m_LocalScale: {x: 1, y: 0.3, z: 1.4199998}
+  m_LocalScale: {x: 100, y: 0.04, z: 160}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1307249474052391472}
@@ -1451,7 +1450,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8925793763771826254
+--- !u!114 &-3443503803376115510
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1471,42 +1470,3 @@ MonoBehaviour:
   _attack: {fileID: 1307249473160749871}
   _type: {fileID: 1307249472091281202}
   _health: {fileID: 1307249473871312366}
-  moveSpeedLimit: 50
-  selected: 0
-  selectionOffset: 50
-  isHovering: 0
-  isDragging: 0
-  wasDragged: 0
-  PointerEnterEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  PointerExitEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  PointerUpEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  PointerDownEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  BeginDragEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  EndDragEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  SelectEvent:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &316115213487106450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307249474124220039}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4601544c9910b3c439de001ca0cf2186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
