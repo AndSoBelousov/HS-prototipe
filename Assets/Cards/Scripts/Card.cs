@@ -4,8 +4,9 @@ using UnityEngine.EventSystems;
 
 namespace Cards
 {
-public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
-{
+public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+    {
+        
         [SerializeField]
         private GameObject _frontCard;
         [SerializeField]
@@ -27,7 +28,18 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         public CardStateType State { get;  set; }
 
+        private Canvas canvas;
+        private Vector3 offset;
+        [SerializeField]
+        private Camera mainCamera;
 
+        public Transform defaultParent;
+
+        private void Awake()
+        {
+            mainCamera = Camera.allCameras[0];
+        }
+        
         public void Configuration(Material picture, CardPropertiesData data, string description )
         {
             _picture.sharedMaterial = picture;
@@ -41,29 +53,47 @@ public class Card : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            switch (State)
+            if (eventData.pointerEnter != null && State != CardStateType.InDeck) 
             {
-                case CardStateType.InHand:
-                    transform.localScale *= 1.5f;
-                    transform.position +=new Vector3(0f, 3f, 0f);
-                    break;
-                case CardStateType.OnTable:
-                    break; 
+                transform.localScale *= 1.5f;
+                transform.localPosition += new Vector3(0f, -3f, 0f);
             }
+                
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            switch (State)
-            {
-                case CardStateType.InHand:
-                    transform.localScale /= 1.5f;
-                    transform.position -=new Vector3(0f, 3f, 0f);
-                    break;
-                case CardStateType.OnTable:
-                    break;
-            }
+            transform.localScale /= 1.5f;
+            transform.localPosition -= new Vector3(0f, -3f, 0f);
         }
+
+
+        public void OnDrag(PointerEventData eventData)
+        {
+
+            Vector3 newPos = mainCamera.ScreenToViewportPoint(eventData.position);
+            newPos.z = 0;
+            transform.position = newPos + offset;
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            offset = transform.position - mainCamera.ScreenToViewportPoint(eventData.position);
+
+            defaultParent = transform.parent;
+
+            transform.SetParent(defaultParent.parent);
+            //GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            transform.SetParent(defaultParent);
+            //GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+
+        
+
 
         [ContextMenu("Switch Visual")]
         public void SwitchVisual() => _frontCard.SetActive(!IsFrontSide);

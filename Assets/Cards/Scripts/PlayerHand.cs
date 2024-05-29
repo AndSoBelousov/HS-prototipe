@@ -10,27 +10,13 @@ namespace Cards
 
         [SerializeField]
         private Transform _positions;
-
-        private void Start ()
-
-        {
-            //_cardsInHand = new Card[_positions.Length];
-        }
+        
+      
         public bool SetNewCard(Card card)
         {
             if (card == null) return true;
-
-            //var index = GetLastPosition();
-
-            //if (index == -1)
-            //{
-            //    Destroy(card.gameObject);
-            //    return false;
-            //}
-
-            //_cardsInHand[index] = card;
-            StartCoroutine(MoveInHand(card, _positions));
-
+            
+            StartCoroutine(MoveInHand(card, _positions) );
             return true;
         }
 
