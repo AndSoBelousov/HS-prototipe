@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1602250849180465776}
   - component: {fileID: 4473743476590686393}
   - component: {fileID: 5049987957218156610}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Cost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ GameObject:
   - component: {fileID: 6767483666081575484}
   - component: {fileID: 72671976625543047}
   - component: {fileID: 2121245265950056916}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: FrontCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 5073227491568293732}
   - component: {fileID: 2912669831813302431}
   - component: {fileID: 5362305802337654057}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,7 +498,7 @@ GameObject:
   - component: {fileID: 6522246108604426515}
   - component: {fileID: 2781120389037922578}
   - component: {fileID: 402479013933438935}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -684,7 +684,7 @@ GameObject:
   - component: {fileID: 197802581538819954}
   - component: {fileID: 1844046118335504358}
   - component: {fileID: 6915729223903797956}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -869,7 +869,7 @@ GameObject:
   - component: {fileID: 179619147960403732}
   - component: {fileID: 110051055552984035}
   - component: {fileID: 7673132165543373360}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1054,7 +1054,7 @@ GameObject:
   - component: {fileID: 7649817500821247717}
   - component: {fileID: 1966625972663682902}
   - component: {fileID: 3225052335170217984}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1166,6 +1166,7 @@ GameObject:
   - component: {fileID: 1397547741534751063}
   - component: {fileID: 4485193627595195780}
   - component: {fileID: 5382599632740181599}
+  - component: {fileID: 1760538462208937208}
   m_Layer: 0
   m_Name: CardPrefab
   m_TagString: Untagged
@@ -1289,6 +1290,8 @@ MonoBehaviour:
   _health: {fileID: 7673132165543373360}
   mainCamera: {fileID: 0}
   defaultParent: {fileID: 0}
+  defaultTempCardParent: {fileID: 0}
+  cloneStorage: {fileID: 5006314558855861507, guid: 1fb3472869fd253409f50c31d3219065, type: 3}
 --- !u!222 &4485193627595195780
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1309,6 +1312,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1760538462208937208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4554972323342588542}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01ef598f35c0bf54f92e1e66e07380d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5165715612494841476
 GameObject:
   m_ObjectHideFlags: 0
@@ -1321,7 +1336,7 @@ GameObject:
   - component: {fileID: 8163127066020015514}
   - component: {fileID: 1695469360427682757}
   - component: {fileID: 4660455577112241429}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Type
   m_TagString: Untagged
   m_Icon: {fileID: 0}
