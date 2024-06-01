@@ -39,14 +39,13 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         public Transform defaultParent, defaultTempCardParent;
         private GameObject tempCardGO;
-        [SerializeField]
-        private GameObject cloneStorage;
-        private float transparency = 0.5f;
+
+
 
         private void Awake()
         {
             mainCamera = Camera.allCameras[0];
-            //CreateClone();
+            tempCardGO = GameObject.Find("TempCardGO");
 
         }
         
@@ -63,23 +62,27 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (eventData.pointerEnter != null && State != CardStateType.InDeck) 
+            if (eventData.pointerEnter != null && State != CardStateType.InDeck 
+                && eventData.pointerDrag == null) 
             {
                 transform.localScale *= 1.5f;
                 transform.localPosition += new Vector3(0f, -3f, 0f);
 
-                if (tempCardGO == null)
-                {
-                    CreateClone();
-                }
             }
                 
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            transform.localScale /= 1.5f;
-            transform.localPosition -= new Vector3(0f, -3f, 0f);
+            if (  State != CardStateType.InDeck
+                && eventData.pointerDrag == null)
+            {
+                transform.localScale /= 1.5f;
+                transform.localPosition -= new Vector3(0f, -3f, 0f);
+
+            }
+
+
         }
 
 
@@ -88,14 +91,22 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
             Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
             transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
+
+            if (tempCardGO.transform.parent != defaultTempCardParent)
+                tempCardGO.transform.SetParent(defaultTempCardParent);
+
+            CheckPosition();
         }
+
 
         public void OnBeginDrag(PointerEventData eventData)
         {
             offset = transform.position - mainCamera.ScreenToViewportPoint(eventData.position);
 
             defaultParent = defaultTempCardParent = transform.parent;
+
             tempCardGO.transform.SetParent(defaultParent);
+            tempCardGO.transform.SetSiblingIndex(transform.GetSiblingIndex());
 
             transform.SetParent(defaultParent.parent);
             //GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -106,22 +117,32 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             transform.SetParent(defaultParent);
             //GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-            tempCardGO.transform.SetParent(cloneStorage.transform);
-            tempCardGO.transform.localPosition = cloneStorage.transform.localPosition;
+            transform.SetSiblingIndex(tempCardGO.transform.GetSiblingIndex());  
+            tempCardGO.transform.SetParent(GameObject.Find("Canvas").transform);
+            tempCardGO.transform.localPosition = new Vector3(1121f, 0f, 0f);
         }
 
         
-        private void CreateClone()
+        private void CheckPosition()
         {
-            GameObject clone = Instantiate(gameObject);
-            
-            clone.transform.localPosition = cloneStorage.transform.localPosition;
+            int newIndex = defaultTempCardParent.childCount;
 
-            clone.GetComponent<ChangeTransparency>().enabled = true;
+            for (int i = 0; i < defaultTempCardParent.childCount; i++)
+            {
+                if(transform.position.x < defaultTempCardParent.GetChild(i).position.x)
+                {
+                    newIndex = i;
 
-            tempCardGO = clone;
+                    if (tempCardGO.transform.GetSiblingIndex() < newIndex)
+                        newIndex--;
 
+                    break;    
+                }
+            }
+
+            tempCardGO.transform.SetSiblingIndex((int)newIndex);
         }
+      
 
        
 
