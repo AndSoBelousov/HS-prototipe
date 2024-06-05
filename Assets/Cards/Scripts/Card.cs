@@ -39,6 +39,8 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         public Transform defaultParent, defaultTempCardParent;
         private GameObject tempCardGO;
+        private bool isEnlarged = false;
+        private bool isDraggable;
 
 
 
@@ -63,23 +65,23 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (eventData.pointerEnter != null && State != CardStateType.InDeck 
-                && eventData.pointerDrag == null) 
+                && eventData.pointerDrag == null && isEnlarged == false) 
             {
                 transform.localScale *= 1.5f;
                 transform.localPosition += new Vector3(0f, -3f, 0f);
-
+                isEnlarged = true;
             }
                 
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (  State != CardStateType.InDeck
-                && eventData.pointerDrag == null)
+            if (  State != CardStateType.InDeck && eventData.pointerDrag == null
+                && isEnlarged == true)
             {
                 transform.localScale /= 1.5f;
                 transform.localPosition -= new Vector3(0f, -3f, 0f);
-
+                isEnlarged = false;
             }
 
 
@@ -88,6 +90,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         public void OnDrag(PointerEventData eventData)
         {
+            if (!isDraggable) return;
 
             Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
             transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
@@ -105,6 +108,9 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
             defaultParent = defaultTempCardParent = transform.parent;
 
+            isDraggable = defaultParent.GetComponent<DropPlaceScr>().fieldType == FieldType.SelfHand;
+            if (!isDraggable) return;
+
             tempCardGO.transform.SetParent(defaultParent);
             tempCardGO.transform.SetSiblingIndex(transform.GetSiblingIndex());
 
@@ -114,6 +120,8 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         public void OnEndDrag(PointerEventData eventData)
         {
+            if (!isDraggable) return;
+
             transform.SetParent(defaultParent);
             //GetComponent<CanvasGroup>().blocksRaycasts = true;
 

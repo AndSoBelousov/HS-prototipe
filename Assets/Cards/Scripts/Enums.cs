@@ -29,4 +29,12 @@ namespace Cards
 		OnTable,
 		InMove
 	}
+
+	public enum FieldType : byte
+	{
+		SelfHand,
+		SelfField,
+		EnemyHand,
+		EnemyField
+	}
 }
