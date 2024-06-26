@@ -1,6 +1,8 @@
 using JetBrains.Annotations;
 using System;
+using System.Collections.Generic;
 using TMPro;
+using Unity.Android.Gradle.Manifest;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -35,14 +37,14 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         private Vector3 offset;
         [SerializeField]
         private Camera mainCamera;
-        //private GameObject cloneCard;
-
+        
         public Transform defaultParent, defaultTempCardParent;
         private GameObject tempCardGO;
         private bool isEnlarged = false;
         private bool isDraggable;
 
-
+        //private CardManager cardManager;
+        
 
         private void Awake()
         {
@@ -50,7 +52,9 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             tempCardGO = GameObject.Find("TempCardGO");
 
         }
+
         
+
         public void Configuration(Material picture, CardPropertiesData data, string description )
         {
             _picture.sharedMaterial = picture;
@@ -58,7 +62,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             _name.text = data.Name;
             _description.text = description;
             _attack.text = data.Attack.ToString();
-            _type.text = data.Type == CardUnitType.None ? string.Empty : data.Type.ToString();// если типа нет то пусто, если есть то указывается какой
+            _type.text = data.Type == CardUnitType.None ? string.Empty : data.Type.ToString();
             _health.text = data.Health.ToString();
         }
 
@@ -115,7 +119,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             tempCardGO.transform.SetSiblingIndex(transform.GetSiblingIndex());
 
             transform.SetParent(defaultParent.parent);
-            //GetComponent<CanvasGroup>().blocksRaycasts = false;
+
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -123,11 +127,14 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             if (!isDraggable) return;
 
             transform.SetParent(defaultParent);
-            //GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-            transform.SetSiblingIndex(tempCardGO.transform.GetSiblingIndex());  
+
+            transform.SetSiblingIndex(tempCardGO.transform.GetSiblingIndex());
             tempCardGO.transform.SetParent(GameObject.Find("Canvas").transform);
             tempCardGO.transform.localPosition = new Vector3(1121f, 0f, 0f);
+
+            
+
         }
 
         
@@ -150,10 +157,8 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
             tempCardGO.transform.SetSiblingIndex((int)newIndex);
         }
-      
 
-       
-
+        
 
         [ContextMenu("Switch Visual")]
         public void SwitchVisual() => _frontCard.SetActive(!IsFrontSide);

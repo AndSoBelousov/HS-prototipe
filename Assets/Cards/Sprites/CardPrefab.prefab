@@ -27,7 +27,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011850626820585121}
   m_LocalRotation: {x: -0, y: -0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -3.1}
+  m_LocalPosition: {x: 0, y: 0, z: -3.107}
   m_LocalScale: {x: 7.142855, y: 7.1428566, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1290,7 +1290,6 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   defaultParent: {fileID: 0}
   defaultTempCardParent: {fileID: 0}
-  cloneStorage: {fileID: 5006314558855861507, guid: 1fb3472869fd253409f50c31d3219065, type: 3}
 --- !u!222 &4485193627595195780
 CanvasRenderer:
   m_ObjectHideFlags: 0

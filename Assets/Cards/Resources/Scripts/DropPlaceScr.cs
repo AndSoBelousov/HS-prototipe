@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,8 +7,14 @@ namespace Cards
 
     public class DropPlaceScr : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        private CardManager cardManager;
 
         public FieldType fieldType;
+
+        private void Start()
+        {
+            cardManager = FindFirstObjectByType<CardManager>(); // Находим CardManager в сцене
+        }
 
         public void OnDrop(PointerEventData eventData)
         {
@@ -23,6 +30,14 @@ namespace Cards
                 cardOffset.z -= 1f;
                 card.transform.position = cardOffset;
 
+                // Если карта перемещена на стол, уведомляем CardManager
+                if (this.fieldType == FieldType.SelfField || this.fieldType == FieldType.EnemyField)
+                {
+                    bool isPlayer = this.fieldType == FieldType.SelfField;
+                    cardManager.OnCardMovedToField(card, isPlayer);
+
+                    //cardManager.InformationAboutTheLista();
+                }
             }
         }
 
@@ -45,6 +60,9 @@ namespace Cards
 
             if (card && card.defaultTempCardParent == transform)
                 card.defaultTempCardParent = card.defaultParent;
+
+
+            
         }
     }
 }

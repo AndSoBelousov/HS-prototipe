@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Cards
 {
     public class PlayerHand : MonoBehaviour
     {
-        private Card[] _cardsInHand;
+        //private Card[] _cardsInHand;
 
         [SerializeField]
         private Transform _positions;
@@ -20,22 +21,17 @@ namespace Cards
             return true;
         }
 
-        //private int GetLastPosition()
-        //{
-        //    for (int i =0;  i < _cardsInHand.Length; i++)
-        //    {
-        //        if (_cardsInHand[i] == null) return i;
-        //    }
-        //    return -1;
-        //}
 
         private IEnumerator MoveInHand(Card card, Transform target)
         {
-            card.SwitchVisual();
+            if(target.transform.localPosition.y < 300) // выше находится рука противника, его карты должны быть скрыты
+            {
+                card.SwitchVisual();
+            }
             float time = 0;
             var startPos = card.transform.position;
             var endPos = target.transform.position;
-            while (time < 1)
+            while (time < 0.6)
             {   
                 card.transform.position = Vector3.Lerp(startPos, endPos, time);
                 time += Time.deltaTime;
@@ -45,6 +41,7 @@ namespace Cards
 
             card.GetComponent<Transform>().SetParent(transform);
             card.State = CardStateType.InHand;
+            
         }
 
 
