@@ -7,7 +7,6 @@ namespace Cards
 {
     public class PlayerHand : MonoBehaviour
     {
-        //private Card[] _cardsInHand;
 
         [SerializeField]
         private Transform _positions;
@@ -43,7 +42,6 @@ namespace Cards
             card.State = CardStateType.InHand;
             
         }
-
 
     }
 }

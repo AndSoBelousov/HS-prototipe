@@ -22,7 +22,7 @@ namespace Cards
 
             Card card = eventData.pointerDrag.GetComponent<Card>();
 
-            if (card != null)
+            if (card != null && cardManager.playerFieldList.Count < 6)
             {
                 card.defaultParent = transform;
 
@@ -35,8 +35,6 @@ namespace Cards
                 {
                     bool isPlayer = this.fieldType == FieldType.SelfField;
                     cardManager.OnCardMovedToField(card, isPlayer);
-
-                    //cardManager.InformationAboutTheLista();
                 }
             }
         }
@@ -61,8 +59,6 @@ namespace Cards
             if (card && card.defaultTempCardParent == transform)
                 card.defaultTempCardParent = card.defaultParent;
 
-
-            
         }
     }
 }

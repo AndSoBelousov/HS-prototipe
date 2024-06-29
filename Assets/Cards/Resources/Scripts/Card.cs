@@ -41,10 +41,10 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         public Transform defaultParent, defaultTempCardParent;
         private GameObject tempCardGO;
         private bool isEnlarged = false;
+
+        [SerializeField]
         private bool isDraggable;
 
-        //private CardManager cardManager;
-        
 
         private void Awake()
         {
@@ -130,10 +130,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
 
             transform.SetSiblingIndex(tempCardGO.transform.GetSiblingIndex());
-            tempCardGO.transform.SetParent(GameObject.Find("Canvas").transform);
-            tempCardGO.transform.localPosition = new Vector3(1121f, 0f, 0f);
-
-            
+            tempCardGO.transform.SetParent(GameObject.Find("Canvas").transform);            
 
         }
 

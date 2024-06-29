@@ -20,14 +20,11 @@ namespace Cards
 
         private Material _baseMat;
         private CardPropertiesData[] _allCards;
-        //public Game _currentGame;
+
         [SerializeField]
         public List<Card> enemyDeckList, playerDeckList,
                           enemyHandList, playerHandList,
                           enemyFieldList, playerFieldList;
-
-        //private Card[] _playerOneCards;
-        //private Card[] _playerTwoCards;
 
         [SerializeField, UnityEngine.Range(5f, 100f)]
         private int _cardInDeck = 30;
@@ -37,16 +34,18 @@ namespace Cards
         private CardPackConfiguration[] _packs;
 
         [Space, SerializeField]
-        private Transform _deckOneParente;
+        private Transform _deckPlayerParente;
         [SerializeField]
-        private Transform _deckTwoParente;
+        private Transform _deckEnemyParente;
         [SerializeField]
-        private PlayerHand _player1;
+        private PlayerHand _playerHand;
         [SerializeField]
-        private PlayerHand _player2;
+        private PlayerHand _enemyHand;
+        [SerializeField]
+        private Transform _playerFieldTransform;
+        [SerializeField]
+        private Transform _enemyFieldTranform;
 
-        //[SerializeField]
-        //private int _turnTimeSettings = 60;
         private int _turn, _turnTime = 60;
         [SerializeField]
         private UnityEngine.UI.Button _endTimeBtn;
@@ -82,13 +81,13 @@ namespace Cards
 
         private void Start()
         {
-            playerDeckList = CreateDeck(_deckOneParente, playerDeckList);   
-            enemyDeckList = CreateDeck(_deckTwoParente, enemyDeckList);
+            playerDeckList = CreateDeck(_deckPlayerParente, playerDeckList);   
+            enemyDeckList = CreateDeck(_deckEnemyParente, enemyDeckList);
 
             _turn = 0;
 
-            StartCoroutine(IssuingCards(4, _player1));
-            StartCoroutine(IssuingCards(4, _player2));
+            StartCoroutine(IssuingCards(4, _playerHand));
+            StartCoroutine(IssuingCards(4, _enemyHand));
             StartCoroutine(TurnFunc());
         }
 
@@ -98,9 +97,6 @@ namespace Cards
             var offset = new Vector3(0f,0f, 0f);
             for(int i =0; i < _cardInDeck; i++) 
             {
-                if (_cardPrefab == null) Debug.Log("Нет сраного префаба и где блять он?");
-                if (parent == null) Debug.Log("нет сраного родителя который блять на прямую указан как блять как? ");
-                if (deck == null) Debug.Log("ну тут я вообще хз, с какго хуя не этого дек, дек блять есть, посмотри выше дура");
                 deck.Add(Instantiate(_cardPrefab, parent));
                 if (deck[i].IsFrontSide) deck[i].SwitchVisual(); 
                 deck[i].transform.transform.localPosition = offset;
@@ -120,8 +116,8 @@ namespace Cards
         IEnumerator IssuingCards(int numberOfCards, PlayerHand player )
         {
             yield return new WaitForSeconds(0.2f);
-            List<Card> playerCardsDeck = player == _player1 ? playerDeckList : enemyDeckList;
-            List<Card> cardsInHand = player == _player1 ? playerHandList : enemyHandList;
+            List<Card> playerCardsDeck = player == _playerHand ? playerDeckList : enemyDeckList;
+            List<Card> cardsInHand = player == _playerHand ? playerHandList : enemyHandList;
 
             for (int i = 0; i < numberOfCards; i++)
             {
@@ -157,15 +153,34 @@ namespace Cards
             }
             else
             {
-                while (_turnTime-- > 23)
+                while (_turnTime-- > 25)
                 {
                     _turnTimeTxt.text = _turnTime.ToString();
                     yield return new WaitForSeconds(1);
+                }
+
+                if (enemyHandList.Count > 0)
+                {
+                    EnemyTurn(enemyHandList);
                 }
             }
 
             ChangeTurn();
         }
+
+         private void EnemyTurn(List<Card> enemyCardsInHand)
+        {
+            int count = Random.Range(0, enemyCardsInHand.Count);
+
+            for (int i = 0; i < count; i++)
+            {
+                enemyCardsInHand[0].transform.SetParent(_enemyFieldTranform);
+                enemyCardsInHand[0].SwitchVisual();
+
+                OnCardMovedToField(enemyCardsInHand[0], false);
+            }
+        }
+
         public void ChangeTurn()
         {
             StopAllCoroutines ();
@@ -173,7 +188,7 @@ namespace Cards
 
             _endTimeBtn.interactable = IsPlaterTurn;
 
-            PlayerHand player = IsPlaterTurn ? _player1 : _player2;
+            PlayerHand player = IsPlaterTurn ? _playerHand : _enemyHand;
             StartCoroutine( IssuingCards(1, player));
             StartCoroutine(TurnFunc());
 
