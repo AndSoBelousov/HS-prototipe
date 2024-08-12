@@ -19,7 +19,7 @@ namespace Cards
        
 
         private Material _baseMat;
-        private CardPropertiesData[] _allCards;
+        public CardPropertiesData[] _allCards;
 
         [SerializeField]
         public List<Card> enemyDeckList, playerDeckList,
@@ -69,7 +69,7 @@ namespace Cards
             _allCards = cards.ToArray();
 
             _baseMat = new Material(Shader.Find("TextMeshPro/Sprite"));
-            _baseMat.renderQueue = 2995;
+            //_baseMat.renderQueue = 2995;
 
             
             enemyHandList = new List<Card>();
@@ -101,11 +101,11 @@ namespace Cards
                 if (deck[i].IsFrontSide) deck[i].SwitchVisual(); 
                 deck[i].transform.transform.localPosition = offset;
                 offset.y += 0.5f;
-
-                var random = _allCards[Random.Range(0, _allCards.Length)];
+                int randomNumber = Random.Range(0, _allCards.Length);
+                var random = _allCards[randomNumber];
                 var picture = new Material(_baseMat);
                 picture.mainTexture = random.Texture;
-                deck[i].Configuration(picture, random, CardUtility.GetDescriptionById(random.Id));
+                deck[i].Configuration(picture, random, CardUtility.GetDescriptionById(random.Id), randomNumber);
                 listCards.Add(deck[i]);
             }
 
@@ -128,6 +128,8 @@ namespace Cards
                     {
                         index = playerCardsDeck[j];
                         playerCardsDeck[j] = null;
+
+
                         break;
                     }
                 }
@@ -141,10 +143,20 @@ namespace Cards
         {
             _turnTime = 30;
             _turnTimeTxt.text = _turnTime.ToString();
-            yield return new WaitForSeconds(0.5f);
-
-            if(IsPlaterTurn)
+            yield return new WaitForSeconds(0.3f);
+            foreach (var card in playerFieldList)
             {
+                card.OutlineOnOrOff(false);
+            }
+
+            if (IsPlaterTurn)
+            {
+                foreach (var card in playerFieldList)
+                {
+                    card.ChangeAttackState(true);
+                    card.OutlineOnOrOff(true );
+                }
+
                 while(_turnTime-- > 0) 
                 {
                     _turnTimeTxt.text = _turnTime.ToString();
@@ -153,6 +165,12 @@ namespace Cards
             }
             else
             {
+                foreach (var card in playerFieldList)
+                {
+                    card.ChangeAttackState(true);
+
+                }
+
                 while (_turnTime-- > 25)
                 {
                     _turnTimeTxt.text = _turnTime.ToString();
@@ -218,21 +236,46 @@ namespace Cards
             {
                 MoveCard(card, enemyHandList, enemyFieldList);
             }
-        }   
-
-        public void InformationAboutTheLista()
-        {
-            for (int i = 0; i < playerHandList.Count; i++)
-            {
-                Debug.Log(playerHandList[i]);
-            }
-            for (int i = 0;i < playerFieldList.Count;i++)
-            {
-                Debug.Log(playerFieldList[i]);
-            }
         }
 
+        //public void FindId(int id)
+        //{
+        //    var card = _allCards[id];
+        //    Debug.Log(card.Name + " | " + card.Health.ToString() + " | " + card.Cost.ToString());
+        //}
 
+        public void CadsFight(Card playerCard, Card enemyCard)
+        {
+            Debug.Log("Запущен метод CardsFight");
+            CardPropertiesData playerData = _allCards[playerCard.IdCard];
+            CardPropertiesData enemyData = _allCards[enemyCard.IdCard];
+
+            playerData.Health -= enemyData.Attack;
+            enemyData.Health -= playerData.Attack;
+
+            playerCard.RefreshData(playerData);
+            enemyCard.RefreshData(enemyData);
+
+            DestroyCard(playerCard);
+            DestroyCard(enemyCard);
+        }
+
+        private void DestroyCard(Card card)
+        {
+            card.OnEndDrag(null);
+            CardPropertiesData cardPropertiesData = _allCards[card.IdCard];
+
+            if (cardPropertiesData.Health <= 0)
+            {
+                if(enemyFieldList.Exists(x => x == card))
+                    enemyFieldList.Remove(card);
+
+                if(playerFieldList.Exists(x => x == card))
+                    playerFieldList.Remove(card);
+
+                Destroy(card.gameObject);
+            }
+        }
     }
 }
 

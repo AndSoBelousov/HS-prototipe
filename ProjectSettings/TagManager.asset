@@ -12,9 +12,9 @@ TagManager:
   - Water
   - UI
   - IgnorReycaster
-  - 
-  - 
-  - 
+  - DominantCard
+  - Card
+  - 'field '
   - 
   - 
   - 
@@ -41,5 +41,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: DominantCard
+    uniqueID: 509965955
+    locked: 0
+  - name: Card
+    uniqueID: 2680564289
+    locked: 0
+  - name: IgnorReycaster
+    uniqueID: 1376558411
+    locked: 0
+  - name: field
+    uniqueID: 2763637379
+    locked: 0
   m_RenderingLayers:
   - Default
+  - DominantCard
+  - Card
+  - IgnorReycaster
+  - field

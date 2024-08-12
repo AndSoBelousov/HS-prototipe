@@ -28,6 +28,8 @@ namespace Cards
 		{
 			return new CardParamsData(Cost, Attack, Health);
 		}
+
+
 	}
 
 	public struct CardParamsData
@@ -40,5 +42,6 @@ namespace Cards
 		{
 			Cost = cost; Attack = attack; Health = health;
 		}
+		
 	}
 }

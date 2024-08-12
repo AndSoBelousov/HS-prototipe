@@ -244,7 +244,7 @@ GameObject:
   - component: {fileID: 582787304}
   - component: {fileID: 582787306}
   - component: {fileID: 582787307}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1044,6 +1044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0040bb47615f26149a7b48f312aff1fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _allCards: []
   enemyDeckList: []
   playerDeckList: []
   enemyHandList: []
@@ -1119,7 +1120,7 @@ GameObject:
   - component: {fileID: 1288148422}
   - component: {fileID: 1288148421}
   - component: {fileID: 1288148420}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Field
   m_TagString: Untagged
   m_Icon: {fileID: 0}
