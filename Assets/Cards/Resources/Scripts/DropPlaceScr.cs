@@ -18,18 +18,16 @@ namespace Cards
 
         public void OnDrop(PointerEventData eventData)
         {
-            Debug.Log("отпустил");
+            
             if (fieldType != FieldType.SelfField) { return; }
 
             Card card = eventData.pointerDrag.GetComponent<Card>();
 
-            //cardManager.FindId((int)card.IdCard);
-            Debug.Log("карта прошла проверку поля");
 
             if (card != null && cardManager.playerFieldList.Count < 6)
             {
                 card.defaultParent = transform;
-                Debug.Log("прошла проверку колличества");
+
                 Vector3 cardOffset = card.transform.position;
                 cardOffset.z = -0.2f;
                 card.transform.position = cardOffset;
@@ -37,7 +35,7 @@ namespace Cards
                 // Если карта перемещена на стол, уведомляем CardManager
                 if (this.fieldType == FieldType.SelfField || this.fieldType == FieldType.EnemyField)
                 {
-                    Debug.Log("карта перемещена");
+
                     bool isPlayer = this.fieldType == FieldType.SelfField;
                     cardManager.OnCardMovedToField(card, isPlayer);
                 }
@@ -46,7 +44,7 @@ namespace Cards
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("навел мышь");
+
             if (eventData.pointerDrag ==null || fieldType == FieldType.EnemyField
                 || fieldType == FieldType.EnemyHand || fieldType == FieldType.SelfHand ) { return; }
 

@@ -52,6 +52,8 @@ namespace Cards
         [SerializeField]
         private TextMeshProUGUI _turnTimeTxt;
 
+        
+
         public bool IsPlaterTurn
         {
             get
@@ -84,11 +86,16 @@ namespace Cards
             playerDeckList = CreateDeck(_deckPlayerParente, playerDeckList);   
             enemyDeckList = CreateDeck(_deckEnemyParente, enemyDeckList);
 
+        }
+
+        public void StartGame()
+        {
             _turn = 0;
 
             StartCoroutine(IssuingCards(4, _playerHand));
             StartCoroutine(IssuingCards(4, _enemyHand));
             StartCoroutine(TurnFunc());
+
         }
 
         private List<Card> CreateDeck(Transform parent, List<Card> listCards)
@@ -105,7 +112,7 @@ namespace Cards
                 var random = _allCards[randomNumber];
                 var picture = new Material(_baseMat);
                 picture.mainTexture = random.Texture;
-                deck[i].Configuration(picture, random, CardUtility.GetDescriptionById(random.Id), randomNumber);
+                deck[i].Configuration(picture, random, CardUtility.GetDescriptionById((uint)random.Id), randomNumber);
                 listCards.Add(deck[i]);
             }
 
@@ -154,7 +161,7 @@ namespace Cards
                 foreach (var card in playerFieldList)
                 {
                     card.ChangeAttackState(true);
-                    card.OutlineOnOrOff(true );
+                    card.OutlineOnOrOff(card.CanHeAttack);
                 }
 
                 while(_turnTime-- > 0) 
@@ -165,13 +172,13 @@ namespace Cards
             }
             else
             {
-                foreach (var card in playerFieldList)
+                foreach (var card in enemyFieldList)
                 {
                     card.ChangeAttackState(true);
 
                 }
 
-                while (_turnTime-- > 25)
+                while (_turnTime-- > 27)
                 {
                     _turnTimeTxt.text = _turnTime.ToString();
                     yield return new WaitForSeconds(1);
@@ -188,6 +195,8 @@ namespace Cards
 
          private void EnemyTurn(List<Card> enemyCardsInHand)
         {
+            Debug.Log("’од противника!");
+
             int count = Random.Range(0, enemyCardsInHand.Count);
 
             for (int i = 0; i < count; i++)
@@ -197,7 +206,25 @@ namespace Cards
 
                 OnCardMovedToField(enemyCardsInHand[0], false);
             }
+
+            foreach (var activeCard in enemyFieldList.FindAll(x => x.CanHeAttack))
+            {
+                Debug.Log("попытка атаки ");
+                if (playerFieldList.Count == 0)
+                {
+                    Debug.Log("у противника нет карт ");
+                    return;
+                }
+
+                var enemy = playerFieldList[Random.Range(0, playerFieldList.Count)];
+
+                activeCard.ChangeAttackState(false);
+                
+                CadsFight(enemy, activeCard);
+            }
+
         }
+
 
         public void ChangeTurn()
         {
@@ -238,17 +265,11 @@ namespace Cards
             }
         }
 
-        //public void FindId(int id)
-        //{
-        //    var card = _allCards[id];
-        //    Debug.Log(card.Name + " | " + card.Health.ToString() + " | " + card.Cost.ToString());
-        //}
-
         public void CadsFight(Card playerCard, Card enemyCard)
         {
-            Debug.Log("«апущен метод CardsFight");
             CardPropertiesData playerData = _allCards[playerCard.IdCard];
             CardPropertiesData enemyData = _allCards[enemyCard.IdCard];
+            Debug.Log("«апущен метод CardsFight, здоровье игроков" + playerData.Health + " и " + enemyData.Health);
 
             playerData.Health -= enemyData.Attack;
             enemyData.Health -= playerData.Attack;
@@ -256,18 +277,38 @@ namespace Cards
             playerCard.RefreshData(playerData);
             enemyCard.RefreshData(enemyData);
 
-            DestroyCard(playerCard);
-            DestroyCard(enemyCard);
+            Debug.Log("атакующа€ карта " + playerData.Name + "«доровье атакующей карты - " + playerData.Health);
+            Debug.Log("атакованна€ карта " + enemyData.Name + "«доровье атакованной карты - " + enemyData.Health);
+            DestroyCard(playerCard, playerData);
+            DestroyCard(enemyCard,enemyData);
         }
 
-        private void DestroyCard(Card card)
+        public void HerosAttack(Card card, HeroIIcon hero)
         {
-            card.OnEndDrag(null);
-            CardPropertiesData cardPropertiesData = _allCards[card.IdCard];
+            CardPropertiesData cardData = _allCards[card.IdCard];
 
-            if (cardPropertiesData.Health <= 0)
+            hero.Health -= cardData.Attack;
+            hero.RefreshHealth();
+
+            if (hero.Health <= 0)
             {
-                if(enemyFieldList.Exists(x => x == card))
+                Debug.Log(" »гра окончена!");
+
+            }
+        }
+
+        private void DestroyCard(Card card, CardPropertiesData cardData)
+        {
+            Debug.Log("DestroyCard сработал ");
+
+            card.OnEndDrag(null);
+            //CardPropertiesData cardPropertiesData = _allCards[card.IdCard];
+
+            if (cardData.Health <= 0)
+            {
+                Debug.Log("карта мертва по всем показател€м");
+
+                if (enemyFieldList.Exists(x => x == card))
                     enemyFieldList.Remove(card);
 
                 if(playerFieldList.Exists(x => x == card))

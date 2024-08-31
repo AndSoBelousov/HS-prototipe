@@ -15,7 +15,7 @@ TagManager:
   - DominantCard
   - Card
   - 'field '
-  - 
+  - Hero
   - 
   - 
   - 
@@ -52,6 +52,9 @@ TagManager:
     locked: 0
   - name: field
     uniqueID: 2763637379
+    locked: 0
+  - name: Hero
+    uniqueID: 1850973741
     locked: 0
   m_RenderingLayers:
   - Default

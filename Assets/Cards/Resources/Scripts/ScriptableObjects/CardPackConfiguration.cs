@@ -16,7 +16,7 @@ namespace Cards.ScriptableObjects
 		[SerializeField]
 		private SideType _sideType;
 		[SerializeField]
-		private ushort _cost;
+		private int _cost;
 		[SerializeField, OneLine(Header = LineHeader.Short)]
 		private CardPropertiesData[] _cards;
 

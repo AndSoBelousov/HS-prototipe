@@ -26,7 +26,7 @@ namespace Cards
             if(target.transform.localPosition.y < 300) // выше находится рука противника, его карты должны быть скрыты
             {
                 card.SwitchVisual();
-                card.GetComponent<AttackedCard>().enabled = true;
+                card.GetComponent<AttackedCard>().enabled = false;
             }
             float time = 0;
             var startPos = card.transform.position;

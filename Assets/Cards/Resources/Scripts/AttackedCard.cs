@@ -6,26 +6,21 @@ using UnityEngine.EventSystems;
 
 public class AttackedCard : MonoBehaviour, IDropHandler
 {
-    //private CardManager cardManager;
-
-    //private void Start()
-    //{
-    //    cardManager= FindFirstObjectByType<CardManager>();
-    //}
 
     public void OnDrop(PointerEventData eventData)
     {
-
+        Debug.Log("сработал AttackedCard");
         var card = eventData.pointerDrag.GetComponent<Card>();
 
-        if(card && card.CanHeAttack &&
+        if (card && card.CanHeAttack &&
             transform.parent.GetComponent<DropPlaceScr>().fieldType == FieldType.EnemyField)
         {
-            //cardManager.CadsFight(card, GetComponent<Card>());
-            //card.ChangeAttackState(false);
+            Debug.Log(card + " атаковал " + GetComponent<Card>());
+            FindFirstObjectByType<CardManager>().CadsFight(card, GetComponent<Card>());
+            card.ChangeAttackState(false);
         }
 
     }
 
-    
+
 }

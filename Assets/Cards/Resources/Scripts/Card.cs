@@ -63,12 +63,6 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             _canAttack = status;
         }
 
-        
-        //public void TakeDamage(float dmg, CardPropertiesData card)
-        //{
-           
-
-        //}
         private void Awake()
         {
             mainCamera = Camera.allCameras[0];
@@ -128,11 +122,12 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         {
             if (!isDraggable) return;
 
-            Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
-            transform.position = new Vector3(mousePosition.x, mousePosition.y, -0.3f);
+            Vector3 mousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
+            transform.position = new Vector3(mousePosition.x, mousePosition.y, 0f);
 
             if (tempCardGO.transform.parent != defaultTempCardParent)
                 tempCardGO.transform.SetParent(defaultTempCardParent);
+
             if(defaultParent.GetComponent<DropPlaceScr>().fieldType != FieldType.SelfField)
                 CheckPosition();
         }
@@ -141,8 +136,10 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         public void OnBeginDrag(PointerEventData eventData)
         {
             offset = transform.position - mainCamera.ScreenToViewportPoint(eventData.position);
+            if (eventData.pointerDrag.gameObject.layer.Equals(10)) return;
 
             defaultParent = defaultTempCardParent = transform.parent;
+
 
             isDraggable = (defaultParent.GetComponent<DropPlaceScr>().fieldType == FieldType.SelfHand ||
                 defaultParent.GetComponent<DropPlaceScr>().fieldType == FieldType.SelfField);
@@ -160,8 +157,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             if (!isDraggable) return;
 
             transform.SetParent(defaultParent);
-            Debug.Log("Карта отпущена, цель нового родителя - " + defaultParent);
-
+           
             transform.SetSiblingIndex(tempCardGO.transform.GetSiblingIndex());
             tempCardGO.transform.SetParent(GameObject.Find("Canvas").transform);            
             

@@ -11,16 +11,16 @@ namespace Cards
 	public struct CardPropertiesData
 	{
 		[Width(30)]
-		public uint Id;
+		public int Id;
 		[NonSerialized]
-		public ushort Cost;
+		public int Cost;
 		public string Name;
 		[Width(50)]
 		public Texture Texture;
 		[Width(40)]
-		public ushort Attack;
+		public int Attack;
 		[Width(40)]
-		public ushort Health;
+		public int Health;
 		[Width(65)]
 		public CardUnitType Type;
 
@@ -34,11 +34,11 @@ namespace Cards
 
 	public struct CardParamsData
 	{
-		public ushort Cost;
-		public ushort Attack;
-		public ushort Health;
+		public int Cost;
+		public int Attack;
+		public int Health;
 
-		public CardParamsData(ushort cost, ushort attack, ushort health)
+		public CardParamsData(int cost, int attack, int health)
 		{
 			Cost = cost; Attack = attack; Health = health;
 		}
