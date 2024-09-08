@@ -16,6 +16,7 @@ namespace Cards
             cardManager = FindFirstObjectByType<CardManager>(); // Находим CardManager в сцене
         }
 
+
         public void OnDrop(PointerEventData eventData)
         {
             
@@ -24,9 +25,12 @@ namespace Cards
             Card card = eventData.pointerDrag.GetComponent<Card>();
 
 
-            if (card != null && cardManager.playerFieldList.Count < 6)
+            if (card != null && cardManager.playerFieldList.Count < 6 && card.CanBayIt)
             {
                 card.defaultParent = transform;
+
+                card.DisablingTheCost();
+                cardManager.PaymentForACard(card);
 
                 Vector3 cardOffset = card.transform.position;
                 cardOffset.z = -0.2f;

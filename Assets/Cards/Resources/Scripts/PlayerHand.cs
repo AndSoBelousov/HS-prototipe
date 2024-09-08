@@ -38,9 +38,10 @@ namespace Cards
 
                 yield return null;
             }
-
+            FindFirstObjectByType<CardManager>().GetComponent<CardManager>().CheckingTheCost();
             card.GetComponent<Transform>().SetParent(transform);
             card.State = CardStateType.InHand;
+           
             
         }
 

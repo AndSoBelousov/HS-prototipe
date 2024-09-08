@@ -46,13 +46,18 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         
         public Transform defaultParent, defaultTempCardParent;
         private GameObject tempCardGO;
+        private bool _canBayIt = false;
         private bool isEnlarged = false;
-
+        private bool isCostWhite = true;
         [SerializeField]
         private bool isDraggable;
         public bool CanHeAttack
         {
             get { return _canAttack; }
+        }
+        public bool CanBayIt
+        {
+            get { return _canBayIt; }
         }
         public int IdCard
         {
@@ -62,7 +67,18 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         {
             _canAttack = status;
         }
+        public void ChangeCosteColor(Color color)
+        {
+            _cost.color = color;
+            
+            _canBayIt = color == Color.green ? true : false;
+        }
+        
+        public void DisablingTheCost()
+        {
+            _cost.enabled = false;
 
+        }
         private void Awake()
         {
             mainCamera = Camera.allCameras[0];
@@ -70,7 +86,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         }
               
-
+        
         public void Configuration(Material picture, CardPropertiesData data, string description, int numberInList )
         {
             _picture.sharedMaterial = picture;

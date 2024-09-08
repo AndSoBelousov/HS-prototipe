@@ -29,7 +29,7 @@ namespace Cards.ScriptableObjects
 
 		private void TryToContruct()
 		{
-			if (_isConstruct) return;
+			//if (_isConstruct) return;
 
 			for(int i = 0; i < _cards.Length; i++)
 			{

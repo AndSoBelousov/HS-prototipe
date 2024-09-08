@@ -12,7 +12,7 @@ namespace Cards
 	{
 		[Width(30)]
 		public int Id;
-		[NonSerialized]
+		[Width(30)]
 		public int Cost;
 		public string Name;
 		[Width(50)]

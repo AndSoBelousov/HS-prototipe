@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.VisionOS;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -52,9 +53,15 @@ namespace Cards
         [SerializeField]
         private TextMeshProUGUI _turnTimeTxt;
 
-        
+        [SerializeField]
+        private int _playerMana, _enemyMana;
+        [SerializeField]
+        private TextMeshProUGUI _playerManaText, _enemyManaText;
+        private int _initialPlaerMana = 3;
+        private int _initialEnemyMana = 3;
 
-        public bool IsPlaterTurn
+
+        public bool IsPlaerTurn
         {
             get
             {
@@ -88,6 +95,27 @@ namespace Cards
 
         }
 
+        private void ManaReplenishment()
+        {
+            if (IsPlaerTurn)
+            {
+                _playerMana = _initialPlaerMana;
+                if (_initialPlaerMana < 10) _initialPlaerMana++;
+            }
+            else
+            {
+                _enemyMana = _initialEnemyMana;
+                if(_initialEnemyMana < 10) _initialEnemyMana++;
+            }
+
+
+            UpdatingManaStats();
+        }
+        private void UpdatingManaStats()
+        {
+            _playerManaText.text = _playerMana.ToString();
+            _enemyManaText.text = _enemyMana.ToString();
+        }
         public void StartGame()
         {
             _turn = 0;
@@ -95,6 +123,9 @@ namespace Cards
             StartCoroutine(IssuingCards(4, _playerHand));
             StartCoroutine(IssuingCards(4, _enemyHand));
             StartCoroutine(TurnFunc());
+            ManaReplenishment();
+            CheckingTheCost();
+
 
         }
 
@@ -126,6 +157,7 @@ namespace Cards
             List<Card> playerCardsDeck = player == _playerHand ? playerDeckList : enemyDeckList;
             List<Card> cardsInHand = player == _playerHand ? playerHandList : enemyHandList;
 
+
             for (int i = 0; i < numberOfCards; i++)
             {
                 Card index = null;
@@ -156,7 +188,8 @@ namespace Cards
                 card.OutlineOnOrOff(false);
             }
 
-            if (IsPlaterTurn)
+            
+            if (IsPlaerTurn)
             {
                 foreach (var card in playerFieldList)
                 {
@@ -197,14 +230,18 @@ namespace Cards
         {
             Debug.Log("Ход противника!");
 
-            int count = Random.Range(0, enemyCardsInHand.Count);
+            //int count = Random.Range(0, enemyCardsInHand.Count);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < enemyCardsInHand.Count; i++)
             {
-                enemyCardsInHand[0].transform.SetParent(_enemyFieldTranform);
-                enemyCardsInHand[0].SwitchVisual();
+                if (_allCards[enemyCardsInHand[i].IdCard].Cost <= _enemyMana)
+                {
+                    _enemyMana -= _allCards[enemyCardsInHand[i].IdCard].Cost;
+                    enemyCardsInHand[i].transform.SetParent(_enemyFieldTranform);
+                    enemyCardsInHand[i].SwitchVisual();
 
-                OnCardMovedToField(enemyCardsInHand[0], false);
+                    OnCardMovedToField(enemyCardsInHand[i], false);
+                }
             }
 
             foreach (var activeCard in enemyFieldList.FindAll(x => x.CanHeAttack))
@@ -231,9 +268,11 @@ namespace Cards
             StopAllCoroutines ();
             _turn++;
 
-            _endTimeBtn.interactable = IsPlaterTurn;
-
-            PlayerHand player = IsPlaterTurn ? _playerHand : _enemyHand;
+            _endTimeBtn.interactable = IsPlaerTurn;
+            CheckingTheCost();
+            ManaReplenishment();
+            PlayerHand player = IsPlaerTurn ? _playerHand : _enemyHand;
+            
             StartCoroutine( IssuingCards(1, player));
             StartCoroutine(TurnFunc());
 
@@ -317,6 +356,33 @@ namespace Cards
                 Destroy(card.gameObject);
             }
         }
+
+        public void CheckingTheCost()
+        {
+
+            for(int i = 0; i < playerHandList.Count; i++)
+            {
+                
+                if (playerHandList[i] != null && _allCards[playerHandList[i].IdCard].Cost <= _playerMana)
+                {
+                    playerHandList[i].ChangeCosteColor(Color.green);
+                    Debug.Log(_allCards[playerHandList[i].IdCard].Cost);
+                }
+                else
+                {
+                    playerHandList[i].ChangeCosteColor(Color.white);
+                }
+            }
+           
+        }
+        
+        public void PaymentForACard(Card card)
+        {
+            _playerMana -= _allCards[card.IdCard].Cost;
+            UpdatingManaStats();
+            CheckingTheCost();
+        }
+
     }
 }
 
